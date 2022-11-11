@@ -1,0 +1,4 @@
+sampleId,sex,alignments
+1,male,male_file
+2,female,female_file
+3,,unknown_file

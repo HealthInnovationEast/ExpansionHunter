@@ -25,6 +25,10 @@ summary['Launch dir']                                  = workflow.launchDir
 summary['Working dir']                                 = workflow.workDir
 summary['Script dir']                                  = workflow.projectDir
 summary['User']                                        = workflow.userName
+// resources
+summary['memory'] = params.memory
+summary['cpus'] = params.cpus
+summary['disk'] = params.disk
 // then arguments
 summary['sample_info']                                 = params.sample_info
 summary['reference']                                   = params.reference
@@ -128,17 +132,28 @@ process obtain_pipeline_metadata {
     '''
 }
 
+process expansion_hunter {
+  input:
+    //tuple val(sampleId), val(sex), path(alignment)
+    tuple val(sampleId), val(sex), val(alignment)
+
+  output:
+    path '*.txt', emit: result
+
+  script:
+    sex = sex == '' ? 'female' : sex
+    """
+    echo ${sampleId}, ${sex}, ${alignment} > ${sampleId}.txt
+    """
+}
 
 
 workflow {
-    // core_ref     = file(params.core_ref)
-    // snv_indel    = file(params.snv_indel)
-    // cvn_sv       = file(params.cvn_sv)
-    // annot        = file(params.annot)
-    // qc_genotype  = file(params.qc_genotype)
+    samples = Channel.fromPath(params.sample_info)
+    //sample_map = pairs.splitCsv(header: true).map { row -> tuple(row.sampleId, row.sec, file(row.alignments)) }
+    sample_map = samples.splitCsv(header: true).map { row -> tuple(row.sampleId, row.sex, row.alignments) }
 
-    samples = Channel.fromPath(params.sample-info)
 
     main:
-        //obtain_pipeline_metadata()
-        samples.subscribe { println "value: $it" }
+        expansion_hunter(sample_map)
+}
