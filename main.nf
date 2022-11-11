@@ -32,7 +32,7 @@ summary['disk'] = params.disk
 // then arguments
 summary['sample_info']                                 = params.sample_info
 summary['reference']                                   = params.reference
-summary['variant_catalogue']                           = params.variant_catalogue
+summary['variant_catalog']                             = params.variant_catalog
 summary['min_locus_coverage']                          = params.min_locus_coverage
 summary['region_extension_length']                     = params.region_extension_length
 summary['analysis_mode']                               = params.analysis_mode
@@ -136,6 +136,11 @@ process expansion_hunter {
   input:
     //tuple val(sampleId), val(sex), path(alignment)
     tuple val(sampleId), val(sex), val(alignment)
+    val(reference) //path
+    val(variant_catalog) //path
+    val(min_locus_coverage)
+    val(region_extension_length)
+    val(analysis_mode)
 
   output:
     path '*.txt', emit: result
@@ -143,7 +148,16 @@ process expansion_hunter {
   script:
     sex = sex == '' ? 'female' : sex
     """
-    echo ${sampleId}, ${sex}, ${alignment} > ${sampleId}.txt
+    echo ExpansionHunter \
+      --reference ${reference} \
+      --variant-catalog ${variant_catalog} \
+      --reads ${alignment} \
+      --sex ${sex} \
+      --output-prefix ${sampleId} \
+      --min-locus-coverage ${min_locus_coverage} \
+      --region-extension-length ${region_extension_length} \
+      --analysis-mode ${analysis_mode} \
+      > ${sampleId}.txt
     """
 }
 
@@ -155,5 +169,12 @@ workflow {
 
 
     main:
-        expansion_hunter(sample_map)
+        expansion_hunter(
+          sample_map,
+          params.reference,
+          params.variant_catalog,
+          params.min_locus_coverage,
+          params.region_extension_length,
+          params.analysis_mode
+        )
 }
