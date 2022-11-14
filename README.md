@@ -4,6 +4,10 @@ Nextflow for [ExpansionHunter][eh-repo] talored for multi sample execution.
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
 
+|                Main                |               Develop               |
+| :--------------------------------: | :---------------------------------: |
+| [![Main][gha-main]][gha-main-view] | [![Develop][gha-dev]][gha-dev-view] |
+
 ## Version of workflow vs ExpansionHunter
 
 |   Workflow   | ExpansionHunter |
@@ -41,4 +45,8 @@ nextflow run main.nf -profile test
 [casm-repo]: https://github.com/cancerit/ExpansionHunter-docker
 [eh-nf-usage]: docs/usage.md
 [eh-repo]: https://github.com/Illumina/ExpansionHunter
+[gha-dev]: https://github.com/cynapse-ccri/ExpansionHunter/actions/workflows/build.yaml/badge.svg?branch=develop
+[gha-dev-view]: https://github.com/cynapse-ccri/ExpansionHunter/actions?query=branch%3Adevelop
+[gha-main]: https://github.com/cynapse-ccri/ExpansionHunter/actions/workflows/build.yaml/badge.svg?branch=main
+[gha-main-view]: https://github.com/cynapse-ccri/ExpansionHunter/actions?query=branch%3Amain
 [quay-eh]: https://quay.io/repository/wtsicgp/expansion_hunter?tab=tags
