@@ -23,4 +23,4 @@ hash nextflow >& /dev/null || (
     mv nextflow $HOME/.local/bin/
 )
 
-exit 1
+exit 0
