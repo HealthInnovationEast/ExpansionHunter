@@ -2,7 +2,6 @@
 	"name": "Python 3",
 	"image": "mcr.microsoft.com/devcontainers/python:3.10-bullseye",
 	"features": {
-		"ghcr.io/devcontainers/features/node:1": {},
 		"ghcr.io/devcontainers/features/docker-in-docker:1": {},
 		"ghcr.io/devcontainers/features/java:1": {}
 	},
