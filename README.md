@@ -2,6 +2,8 @@
 
 Nextflow for [ExpansionHunter][eh-repo] talored for multi sample execution.
 
+[![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit)](https://github.com/pre-commit/pre-commit)
+
 ## Version of workflow vs ExpansionHunter
 
 | Workflow | ExpansionHunter |
