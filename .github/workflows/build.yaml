@@ -19,9 +19,9 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: MillironX/setup-nextflow@v1
-      - uses: luchihoratiu/debug-via-ssh@main
-        with:
-          NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
-          SSH_PASS: ${{ secrets.SSH_PASS }}
-      # - run: example/prepare_test_data.sh
-      # - run: nextflow run main.sh -profile test
+      # - uses: luchihoratiu/debug-via-ssh@main
+      #   with:
+      #     NGROK_AUTH_TOKEN: ${{ secrets.NGROK_AUTH_TOKEN }}
+      #     SSH_PASS: ${{ secrets.SSH_PASS }}
+      - run: example/prepare_test_data.sh
+      - run: nextflow run main.sh -profile test
