@@ -17,7 +17,7 @@ curl -sSLO https://github.com/Illumina/ExpansionHunter/raw/${TAG}/example/input/
 docker pull quay.io/wtsicgp/expansion_hunter:5.0.0
 
 ## adds csi index to files
-docker run $(id -u ${USER}):$(id -g ${USER}) -v $PWD:/d:rw --rm quay.io/wtsicgp/expansion_hunter:5.0.0 samtools index -c /d/variants.bam
+docker run -u $(id -u ${USER}):$(id -g ${USER}) -v $PWD:/d:rw --rm quay.io/wtsicgp/expansion_hunter:5.0.0 samtools index -c /d/variants.bam
 ## create cram input
-docker run $(id -u ${USER}):$(id -g ${USER}) -v $PWD:/d:rw --rm quay.io/wtsicgp/expansion_hunter:5.0.0 samtools view -T /d/reference.fa -C -o /d/variants.cram /d/variants.bam
-docker run $(id -u ${USER}):$(id -g ${USER}) -v $PWD:/d:rw --rm quay.io/wtsicgp/expansion_hunter:5.0.0 samtools index /d/variants.cram
+docker run -u $(id -u ${USER}):$(id -g ${USER}) -v $PWD:/d:rw --rm quay.io/wtsicgp/expansion_hunter:5.0.0 samtools view -T /d/reference.fa -C -o /d/variants.cram /d/variants.bam
+docker run -u $(id -u ${USER}):$(id -g ${USER}) -v $PWD:/d:rw --rm quay.io/wtsicgp/expansion_hunter:5.0.0 samtools index /d/variants.cram
