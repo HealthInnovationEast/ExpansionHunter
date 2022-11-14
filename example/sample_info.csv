@@ -1,4 +1,4 @@
-sampleId,sex,alignments
-1,male,male_file
-2,female,female_file
-3,,unknown_file
+sampleId,sex,reads,read_idx
+sample1_bam_bai,female,test_data/variants.bam,test_data/variants.bam.bai
+sample2_bam_csi,female,test_data/variants.bam,test_data/variants.bam.csi
+sample3_cram_crai,female,test_data/variants.cram,test_data/variants.cram.crai

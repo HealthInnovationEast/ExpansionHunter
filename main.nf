@@ -33,8 +33,8 @@ summary['disk'] = params.disk
 summary['sample_info']                                 = params.sample_info
 summary['reference']                                   = params.reference
 summary['variant_catalog']                             = params.variant_catalog
-summary['min_locus_coverage']                          = params.min_locus_coverage
 summary['region_extension_length']                     = params.region_extension_length
+summary['aligner']                                     = params.aligner
 summary['analysis_mode']                               = params.analysis_mode
 
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
@@ -134,38 +134,72 @@ process obtain_pipeline_metadata {
 
 process expansion_hunter {
   input:
-    //tuple val(sampleId), val(sex), path(alignment)
-    tuple val(sampleId), val(sex), val(alignment)
-    val(reference) //path
-    val(variant_catalog) //path
-    val(min_locus_coverage)
+    tuple val(sampleId), val(sex), path(reads), path(read_idx)
+    //tuple val(sampleId), val(sex), val(reads), val(read_idx)
+    path(reference) //path
+    path(variant_catalog) //path
+    val(aligner)
     val(region_extension_length)
     val(analysis_mode)
 
   output:
-    path '*.txt', emit: result
+    tuple val(sampleId), path('*.vcf'), path('*_realigned.bam'), emit: eh_data
+    path '*.json'
+
+  publishDir {
+      "results/${sampleId}"
+  }, mode: 'copy', pattern: '*.json'
+
+  // not stricly needed here, but incase used as template later
+  // makes sure pipelines fail properly, plus errors and undef values
+  shell = ['/bin/bash', '-euo', 'pipefail']
 
   script:
     sex = sex == '' ? 'female' : sex
     """
-    echo ExpansionHunter \
+    ExpansionHunter \
       --reference ${reference} \
       --variant-catalog ${variant_catalog} \
-      --reads ${alignment} \
-      --sex ${sex} \
-      --output-prefix ${sampleId} \
-      --min-locus-coverage ${min_locus_coverage} \
+      --reads ${reads} \
+      --sex '${sex}' \
+      --output-prefix '${sampleId}' \
+      --aligner '${aligner}' \
       --region-extension-length ${region_extension_length} \
-      --analysis-mode ${analysis_mode} \
-      > ${sampleId}.txt
+      --analysis-mode '${analysis_mode}' \
+      --threads ${task.cpus}
+    """
+}
+
+process sort_n_index {
+  input:
+    tuple val(sampleId), path(vcf), path(bam)
+    path(reference)
+
+  output:
+    tuple path('*.vcf.gz'), path('*.vcf.gz.tbi'), emit: eh_vcf
+    tuple path('*.cram'), path('*.cram.crai'), emit: eh_cram
+
+   publishDir {
+      "results/${sampleId}"
+  }, mode: 'copy', pattern: '*.{vcf.gz,vcf.gz.tbi,cram,crai}'
+
+  // not stricly needed here, but incase used as template later
+  // makes sure pipelines fail properly, plus errors and undef values
+  shell = ['/bin/bash', '-euo', 'pipefail']
+
+  script:
+    """
+    bgzip -c ${vcf} > ${vcf}.gz
+    tabix -p vcf ${vcf}.gz
+    samtools sort -@ ${task.cpus} --write-index --output-fmt CRAM -o ${sampleId}_realigned.cram --reference ${reference} ${bam}
     """
 }
 
 
 workflow {
     samples = Channel.fromPath(params.sample_info)
-    //sample_map = pairs.splitCsv(header: true).map { row -> tuple(row.sampleId, row.sec, file(row.alignments)) }
-    sample_map = samples.splitCsv(header: true).map { row -> tuple(row.sampleId, row.sex, row.alignments) }
+    sample_map = samples.splitCsv(header: true).map { row -> tuple(row.sampleId, row.sex, file(row.reads), file(row.read_idx)) }
+    //sample_map = samples.splitCsv(header: true).map { row -> tuple(row.sampleId, row.sex, row.reads, row.read_idx) }
 
 
     main:
@@ -173,8 +207,9 @@ workflow {
           sample_map,
           params.reference,
           params.variant_catalog,
-          params.min_locus_coverage,
+          params.aligner,
           params.region_extension_length,
           params.analysis_mode
         )
+        sort_n_index(expansion_hunter.out.eh_data, params.reference)
 }
