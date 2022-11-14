@@ -189,7 +189,7 @@ process sort_n_index {
 
   script:
     """
-    bgzip -c ${vcf} > ${vcf}.gz
+    (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort -k1,1 -k2,2n)) | bgzip -c > ${vcf}.gz
     tabix -p vcf ${vcf}.gz
     samtools sort -@ ${task.cpus} --write-index --output-fmt CRAM -o ${sampleId}_realigned.cram --reference ${reference} ${bam}
     """
