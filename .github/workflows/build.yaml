@@ -1,0 +1,15 @@
+name: composite
+
+on:
+  pull_request:
+  push:
+    branches: ['**']
+
+jobs:
+  nextflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: MillironX/setup-nextflow@v1
+      - run: example/prepare_test_data.sh
+      - run: nextflow run main.nf -profile test
