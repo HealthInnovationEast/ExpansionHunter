@@ -14,3 +14,10 @@ jobs:
       with:
         python-version: '3.10'
     - uses: pre-commit/action@v3.0.0
+  nextflow:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: MillironX/setup-nextflow@v1
+      - run: example/prepare_test_data.sh
+      - run: nextflow run main.sh -profile test
