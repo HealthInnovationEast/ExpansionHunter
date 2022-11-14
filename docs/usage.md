@@ -34,6 +34,10 @@ Passed to `--variant-cataloge`. See core [usage][eh-usage].
 
 ## Optional args
 
+### `--cpus`
+
+Passed through to ExpansionHunter `--threads` and sort/cram compression.  Nextflow naming convention.
+
 ### `--region_extension_length`
 
 Passed to `--region-extension-length`. See core [usage][eh-usage].
