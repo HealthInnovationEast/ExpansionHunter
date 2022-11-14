@@ -8,7 +8,7 @@ Nextflow for [ExpansionHunter][eh-repo] talored for multi sample execution.
 
 | Workflow | ExpansionHunter |
 | :------: | :-------------: |
-|   all    |     v5.0.0      |
+|  0.1.0   |     v5.0.0      |
 
 ## Usage
 

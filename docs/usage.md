@@ -16,8 +16,8 @@ sampleId,sex,alignments
 
 Each subsequent line describes an individual sample.
 
-| sampleId | sex | reads | read_idx |
-|\----|----|----|
+| sampleId              | sex         | reads                            | read_idx           |
+| --------------------- | ----------- | -------------------------------- | ------------------ |
 | Identifier for sample | male/female | BAM or CRAM file to be processed | Index for bam/cram |
 
 - `sampleId` is incoprporated into `--output-prefix` in the core command.
