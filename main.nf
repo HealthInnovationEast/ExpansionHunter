@@ -110,6 +110,7 @@ process obtain_pipeline_metadata {
     output:
       path("pipeline_metadata_report.tsv"), emit: pipeline_metadata_report
 
+    // same as script except ! instead of $ for variables
     shell:
       '''
       echo "Repository\t!{repository}"                  > temp_report.tsv
@@ -129,6 +130,11 @@ process obtain_pipeline_metadata {
       echo "RACI owner\t!{raci_owner}"                 >> temp_report.tsv
       echo "Domain keywords\t!{domain_keywords}"       >> temp_report.tsv
       awk 'BEGIN{print "Metadata_variable\tValue"}{print}' OFS="\t" temp_report.tsv > pipeline_metadata_report.tsv
+      '''
+
+    stub:
+      '''
+      touch pipeline_metadata_report.tsv
       '''
 }
 
@@ -168,6 +174,13 @@ process expansion_hunter {
       --analysis-mode '${analysis_mode}' \
       --threads ${task.cpus}
     """
+
+  stub:
+    """
+    touch ${sampleId}.vcf
+    touch ${sampleId}_realigned.bam
+    touch ${sampleId}.json
+    """
 }
 
 process sort_n_index {
@@ -192,6 +205,14 @@ process sort_n_index {
     (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort -k1,1 -k2,2n)) | bgzip -c > ${vcf}.gz
     tabix -p vcf ${vcf}.gz
     samtools sort -@ ${task.cpus} --write-index --output-fmt CRAM -o ${sampleId}_realigned.cram --reference ${reference} ${bam}
+    """
+
+  stub:
+    """
+    touch ${vcf}.gz
+    touch ${vcf}.gz.tbi
+    touch ${sampleId}_realigned.cram
+    touch ${sampleId}_realigned.cram.crai
     """
 }
 
