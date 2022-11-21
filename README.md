@@ -10,9 +10,9 @@ Nextflow for [ExpansionHunter][eh-repo] talored for multi sample execution.
 
 ## Version of workflow vs ExpansionHunter
 
-|   Workflow   | ExpansionHunter |
-| :----------: | :-------------: |
-| 0.1.0, 0.1.1 |     v5.0.0      |
+|      Workflow       | ExpansionHunter |
+| :-----------------: | :-------------: |
+| 0.1.0, 0.1.1, 0.2.0 |     v5.0.0      |
 
 ## Usage
 
