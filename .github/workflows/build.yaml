@@ -1,4 +1,4 @@
-name: composite
+name: Build
 
 on:
   pull_request:
@@ -11,5 +11,8 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - uses: MillironX/setup-nextflow@v1
+      # first validate flow - uses stub blocks
+      - run: nextflow run main.nf -stub-run -profile test
+      # then run with test data - uses script/shell/exec blocks
       - run: example/prepare_test_data.sh
       - run: nextflow run main.nf -profile test
