@@ -1,4 +1,4 @@
-# ExpansionHunter
+# ExpansionHunter <!-- omit in toc -->
 
 Nextflow for [ExpansionHunter][eh-repo] talored for multi sample execution.
 
@@ -8,11 +8,17 @@ Nextflow for [ExpansionHunter][eh-repo] talored for multi sample execution.
 | :--------------------------------: | :---------------------------------: |
 | [![Main][gha-main]][gha-main-view] | [![Develop][gha-dev]][gha-dev-view] |
 
+- [Version of workflow vs ExpansionHunter](#version-of-workflow-vs-expansionhunter)
+- [Usage](#usage)
+- [Docker image](#docker-image)
+- [Test data/profile](#test-dataprofile)
+- [Release process](#release-process)
+
 ## Version of workflow vs ExpansionHunter
 
-|      Workflow       | ExpansionHunter |
-| :-----------------: | :-------------: |
-| 0.1.0, 0.1.1, 0.2.0 |     v5.0.0      |
+|             Workflow             | ExpansionHunter |
+| :------------------------------: | :-------------: |
+| 0.1.0, 0.1.1,<br>0.2.0,<br>0.3.0 |     v5.0.0      |
 
 ## Usage
 
