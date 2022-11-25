@@ -1,8 +1,21 @@
-# Usage
+# Usage <!-- omit in toc -->
 
 For descriptions of all arguments not detailed here please see the tool documentation [here][eh-usage].
 
 All links here are pinned to the version of ExpansionHunter that this nextflow has been created for.
+
+- [Required args](#required-args)
+  - [`--sample_info`](#--sample_info)
+  - [`--reference`](#--reference)
+  - [`--variant_catalog`](#--variant_catalog)
+- [Optional args](#optional-args)
+  - [`--cpus`](#--cpus)
+  - [`--region_extension_length`](#--region_extension_length)
+  - [`--analysis_mode`](#--analysis_mode)
+  - [`--aligner`](#--aligner)
+- [Resource options](#resource-options)
+  - [`--memory`](#--memory)
+  - [`--disk`](#--disk)
 
 ## Required args
 
@@ -49,6 +62,18 @@ Passed to `--analysis-mode`. See core [usage][eh-usage].
 ### `--aligner`
 
 See core [usage][eh-usage].
+
+## Resource options
+
+### `--memory`
+
+Change the default per-cpu memory value: 3.2GB
+
+### `--disk`
+
+Set required disk space for job: 10GB
+
+This should be ~ `input data x 1.5`.
 
 <!-- refs -->
 
