@@ -1,7 +1,6 @@
 FROM rocker/r-base:4.2.2
-# Install packages
-RUN R -e "install.packages(c('tidyr', 'dplyr', 'data.table', 'stringr', 'Rsamtools'),
-                           dependencies=TRUE, 
-                           repos='http://cran.rstudio.com/')"
-RUN R -e "packageDescription('tidyr')$Version" / && sleep 5
+RUN R -e "install.packages(c('tidyr', 'dplyr', 'data.table', 'stringr', 'Rsamtools', 'argparser', 'BiocManager'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
+RUN R -e "BiocManager::install(c('GenomicAlignments'))"
+COPY mapV1.r /DockeriseRmapV1/mapV1.r 
+CMD R -e "source('/DockeriseRmapV1/mapV1.r')"
                            
