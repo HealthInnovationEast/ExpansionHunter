@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
-
+getwd()
 ## for installation process
 # BiocManager::install(c("GenomicAlignments"))
 # # results in request for huge update of dependencies
 # install.packages('argparser')
-
+BiocManager::install(c('GenomicAlignments'))
 # Calculate the mean absolute purity (MAP) for every loci in a bam file
 # MAP is defined as the average percentage of bases matching the reference across all reads that alignment to a repeat
 
@@ -56,8 +56,8 @@ calc_map_vect <- function(temp_file){
 add_tag <- function(folder, sample,  MAP){
   filepath <- paste0(folder, sample, ".vcf.gz")
   # Merge variants list with MAP scores
-  df <- merge(read.table(opt_get('variants'), col.names= c('locus', 'CHROM', 'POS')), 
-              MAP, by='locus', all.x = T) %>% 
+  df <- merge(read.table(opt_get('variants'), col.names= c('locus', 'CHROM', 'POS')),
+              MAP, by='locus', all.x = T) %>%
               select(CHROM, POS, map) %>%
               replace(is.na(.), '.')
   # Create temp dir and write bcf annotation file to a temp directory
@@ -77,11 +77,10 @@ add_tag <- function(folder, sample,  MAP){
 # Write header line for annotation and store in inputs directory
 write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">', paste0(folder,'inputs/annot.hdr'))
 
-# This script takes the reads that overlap a locus with only one repeat 
+# This script takes the reads that overlap a locus with only one repeat
 # and combines the CIGAR strings for all the reads overlapping that locus, saving the output in the temp directory
 system(paste('sh DockeriseRmap/map.sh', bamfile, multi_str))
 MAP <- calc_map_vect('temp/temp_data.txt')
 add_tag(folder, sample, MAP)
 #Error checking script looks to see if the final annotated vcf has more than 1000 missing values or MAP values lower than 0.8.
 system(paste('sh error_check_map.sh', paste0(outdir, outfile, '.MAP.vcf.gz')))
-
