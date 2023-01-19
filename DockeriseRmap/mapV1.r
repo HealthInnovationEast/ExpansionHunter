@@ -97,6 +97,7 @@ add_tag <- function(folder, sample, variants, MAP){
 
 # Write header line for annotation
 write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">', paste0(folder,'inputs/annot.hdr'))
+
 bam_df <- dfp(folder, sample, multi_str_f)
 MAP <- calc_map_vect(bam_df)
 add_tag(folder, sample, variants, MAP)
