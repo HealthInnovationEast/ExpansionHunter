@@ -1,10 +1,10 @@
 #!/usr/bin/env Rscript
-getwd()
+
 ## for installation process
 # BiocManager::install(c("GenomicAlignments"))
 # # results in request for huge update of dependencies
 # install.packages('argparser')
-BiocManager::install(c('GenomicAlignments'))
+
 # Calculate the mean absolute purity (MAP) for every loci in a bam file
 # MAP is defined as the average percentage of bases matching the reference across all reads that alignment to a repeat
 
@@ -54,9 +54,9 @@ calc_map_vect <- function(temp_file){
 # Add the MAP tag to the vcf file for each loci
 # EH vcf files should be compressed and indexed
 add_tag <- function(folder, sample,  MAP){
-  filepath <- paste0(folder, sample, ".vcf.gz")
+  #filepath <- paste0(folder, sample, ".vcf.gz")
   # Merge variants list with MAP scores
-  df <- merge(read.table(opt_get('variants'), col.names= c('locus', 'CHROM', 'POS')),
+  df <- merge(read.table(variants, col.names= c('locus', 'CHROM', 'POS')),
               MAP, by='locus', all.x = T) %>%
               select(CHROM, POS, map) %>%
               replace(is.na(.), '.')
@@ -64,11 +64,12 @@ add_tag <- function(folder, sample,  MAP){
   system(paste0('mkdir -p ', folder, 'temp'))
   write.table(df, paste0(folder,'temp/temp.annot.tab'), sep='\t', quote=F, row.names = F, col.names = F)
   # Sort zip and index annotation file
-  system(paste0('sort -V -k1,1 -k2,2 ', folder,'temp/temp.annot.tab > temp/temp.sorted_annot.tab'))
+  system(paste0('sort -V -k1,1 -k2,2 ', folder,'temp/temp.annot.tab >> ', folder,'temp/temp.sorted_annot.tab'))
   runbgzip(paste0(folder, 'temp/temp.sorted_annot.tab'))
   runtabix(paste0('-s1 -b2 -e2 ', folder, 'temp/temp.sorted_annot.tab.gz'))
+  print("subcheck")
   # Run bcftools to annotate the vcf with MAP values
-  runbcftools(paste0('annotate -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'inputs/annot.hdr -c CHROM,POS,FMT/MAP ', folder, 'genotypes/', sample, '.vcf.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
+  runbcftools(paste0('annotate -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'inputs/annot.hdr -c CHROM,POS,FMT/MAP ', folder, outfile, '.vcf.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
   runtabix(paste0(outdir, outfile, '.MAP.vcf.gz'))
   system("rm temp/temp*")
   }
@@ -79,8 +80,9 @@ write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">'
 
 # This script takes the reads that overlap a locus with only one repeat
 # and combines the CIGAR strings for all the reads overlapping that locus, saving the output in the temp directory
-system(paste('sh DockeriseRmap/map.sh', bamfile, multi_str))
-MAP <- calc_map_vect('temp/temp_data.txt')
+temp_file = paste0(folder, "temp_data.txt")
+system(paste('sh DockeriseRmap/map.sh', bamfile, multi_str, temp_file))
+MAP <- calc_map_vect(temp_file)
 add_tag(folder, sample, MAP)
 #Error checking script looks to see if the final annotated vcf has more than 1000 missing values or MAP values lower than 0.8.
 system(paste('sh error_check_map.sh', paste0(outdir, outfile, '.MAP.vcf.gz')))
