@@ -67,7 +67,6 @@ add_tag <- function(folder, sample,  MAP){
   system(paste0('sort -V -k1,1 -k2,2 ', folder,'temp/temp.annot.tab >> ', folder,'temp/temp.sorted_annot.tab'))
   runbgzip(paste0(folder, 'temp/temp.sorted_annot.tab'))
   runtabix(paste0('-s1 -b2 -e2 ', folder, 'temp/temp.sorted_annot.tab.gz'))
-  print("subcheck")
   # Run bcftools to annotate the vcf with MAP values
   runbcftools(paste0('annotate -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'inputs/annot.hdr -c CHROM,POS,FMT/MAP ', folder, outfile, '.vcf.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
   runtabix(paste0(outdir, outfile, '.MAP.vcf.gz'))
@@ -81,7 +80,7 @@ write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">'
 # This script takes the reads that overlap a locus with only one repeat
 # and combines the CIGAR strings for all the reads overlapping that locus, saving the output in the temp directory
 temp_file = paste0(folder, "temp_data.txt")
-system(paste('sh DockeriseRmap/map.sh', bamfile, multi_str, temp_file))
+system(paste('sh map.sh', bamfile, multi_str, temp_file))
 MAP <- calc_map_vect(temp_file)
 add_tag(folder, sample, MAP)
 #Error checking script looks to see if the final annotated vcf has more than 1000 missing values or MAP values lower than 0.8.
