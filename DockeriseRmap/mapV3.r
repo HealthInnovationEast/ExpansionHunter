@@ -16,6 +16,7 @@ p <- arg_parser("Incorporate MAP values from alignments into the VCF file")
 # add args
 p <- add_argument(p, 'variants', type="character", help = 'File containing EH variants')
 p <- add_argument(p, 'bamfile', type="character", help = 'BAM File from EH')
+p <- add_argument(p, 'vcffile', type="character", help = 'BAM File from EH')
 p <- add_argument(p, 'multi_strs', type="character", help = 'Text file containing multi-str variants (not handled)')
 p <- add_argument(p, 'folder', type="character", help = 'Path for intermediate files')
 p <- add_argument(p, 'outdir', type="character", help = 'Path for final output file')
@@ -25,6 +26,7 @@ argv <- parse_args(p)
 
 variants <- argv$variants
 bamfile <- argv$bamfile
+vcffile <- argv$vcffile
 multi_str <- argv$multi_strs
 folder <- argv$folder
 outdir <- argv$outdir
@@ -68,9 +70,9 @@ add_tag <- function(folder, sample,  MAP){
   runbgzip(paste0(folder, 'temp/temp.sorted_annot.tab'))
   runtabix(paste0('-s1 -b2 -e2 ', folder, 'temp/temp.sorted_annot.tab.gz'))
   # Run bcftools to annotate the vcf with MAP values
-  runbcftools(paste0('annotate -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'inputs/annot.hdr -c CHROM,POS,FMT/MAP ', folder, outfile, '.vcf.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
+  runbcftools(paste0('annotate -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'inputs/annot.hdr -c CHROM,POS,FMT/MAP ', vcffile, '.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
   runtabix(paste0(outdir, outfile, '.MAP.vcf.gz'))
-  system("rm temp/temp*")
+  system(paste0("rm ", folder, "temp/temp*"))
   }
 
 
