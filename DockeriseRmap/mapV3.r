@@ -70,14 +70,14 @@ add_tag <- function(folder, sample,  MAP){
   runbgzip(paste0(folder, 'temp/temp.sorted_annot.tab'))
   runtabix(paste0('-s1 -b2 -e2 ', folder, 'temp/temp.sorted_annot.tab.gz'))
   # Run bcftools to annotate the vcf with MAP values
-  runbcftools(paste0('annotate -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'inputs/annot.hdr -c CHROM,POS,FMT/MAP ', vcffile, '.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
+  runbcftools(paste0('annotate -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'annot.hdr -c CHROM,POS,FMT/MAP ', vcffile, '.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
   runtabix(paste0(outdir, outfile, '.MAP.vcf.gz'))
   system(paste0("rm ", folder, "temp/temp*"))
   }
 
 
 # Write header line for annotation and store in inputs directory
-write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">', paste0(folder,'inputs/annot.hdr'))
+write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">', paste0(folder,'annot.hdr'))
 
 # This script takes the reads that overlap a locus with only one repeat
 # and combines the CIGAR strings for all the reads overlapping that locus, saving the output in the temp directory
