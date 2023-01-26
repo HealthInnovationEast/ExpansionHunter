@@ -1,0 +1,27 @@
+Run with:
+OLD: docker run --rm -v /results/  -v /results/ -ti <Image ID>
+docker run --rm -v /workspaces/ExpansionHunter/results:/workspaces/ExpansionHunter/results:ro -v $PWD:/workspaces/ExpansionHunter/results2:rw  -ti 30e825c07f48
+
+where results is the location of the current data (will be mentioned in A, C, D and E)
+
+Then:
+cd ../..
+bgzip -c results/repeats.vcf > results/repeats.vcf.gz
+tabix -p vcf results/repeats.vcf.gz
+touch results/annot.hdr
+Rscript mapV3.r results/repeats.txt results/repeats_realigned.bam results/repeats.vcf results/multi_str.txt results/ results/ repeats
+
+
+cd ../..
+bgzip -c ${A} > ${A}.gz
+tabix -p vcf ${A}.gz
+touch ${B}/annot.hdr
+Rscript mapV3.r ${C} ${D} ${C} ${E} ${B} ${F} ${G}
+
+${A} - VCF file with path - results/repeats.vcf
+${B} - folder for intermediates - results/
+${C} - variants details list text file with path (example from J) - results/repeats.txt
+${D} - BAM file with path - results/repeats_realigned.bam
+${E} - text file with list of exclusions with path- results/multi_str.txt
+${F} - outdir -  results/
+${G} - root string for output - repeats
