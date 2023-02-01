@@ -44,22 +44,22 @@ extract_cigar <- function(x) {
 
 # Extract cigar strings for reads in the vicinity of STRs
 # The input BAM file must be sorted and indexed
-dfp <- function(folder, sample, multi_str_f){ 
+dfp <- function(folder, sample, multi_str_f){
   multi_str <- read.table(multi_str_f)[[1]] #List of multi-str loci to filter out. This function does not yet handle multi-repeat STRs
   path_bam <- paste0(folder,'genotypes/', sample, '_sorted.bam')
   bamFile <- BamFile(path_bam)
   params <- ScanBamParam(tag = 'XG') #Extract the XG tag from the BAM file
   bam_df <- scanBam(bamFile, param=params)
-  bam_df <- data.table('tag' = bam_df[[1]][["tag"]][["XG"]]) %>% 
+  bam_df <- data.table('tag' = bam_df[[1]][["tag"]][["XG"]]) %>%
     filter(str_count(tag, '\\[') > 1) %>% # Only keep reads that overlap the repeat
     separate(tag, into=c('locus', 'str_pos', 'graph_cigar'), sep=',') %>%
     select(locus, graph_cigar) %>%
     filter(!locus %in% multi_str) %>%
     mutate(split_cgar = stringr::str_split(graph_cigar, "\\[|\\]")) %>%
     select(locus, split_cgar)
-  
+
   bam_df[, cigar := purrr::map(split_cgar, extract_cigar)]
-  
+
   bam_df <- bam_df %>%
     select(locus, cigar)
   return(bam_df)
@@ -78,8 +78,8 @@ calc_map_vect <- function(bam_df){
 add_tag <- function(folder, sample, variants, MAP){
   filepath <- paste0(folder, sample, ".vcf.gz")
   # Merge variants list with MAP scores
-  df <- merge(read.table(variants, col.names= c('locus', 'CHROM', 'POS')), 
-              MAP, by='locus', all.x = T) %>% 
+  df <- merge(read.table(variants, col.names= c('locus', 'CHROM', 'POS')),
+              MAP, by='locus', all.x = T) %>%
               select(CHROM, POS, map) %>%
               replace(is.na(.), '.')
   # Create temp dir and write bcf annotation file to a temp directory
@@ -101,5 +101,3 @@ write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">'
 bam_df <- dfp(folder, sample, multi_str_f)
 MAP <- calc_map_vect(bam_df)
 add_tag(folder, sample, variants, MAP)
-
-
