@@ -15,6 +15,7 @@ RUN mkdir /workdir
 RUN chown ubuntu /workdir
 
 # Add test run
+# rm test/repeats.MAP.vcf.gz will fall if the RScript didn't succeed in creating that file
 RUN mkdir -p test \
      && mkdir -p results \
      && cd results \
@@ -27,13 +28,11 @@ RUN mkdir -p test \
      && tabix -p vcf test/repeats.vcf.gz \
      && touch test/annot.hdr \
      && Rscript mapV3.r results/repeats.txt results/repeats_realigned.bam test/repeats.vcf results/multi_str.txt test/ test/ repeats \
-     && rm test/temp/* \
-     && rm test/repeats2.MAP.vcf.gz \
-     && rm results/*
+     && rm test/repeats.MAP.vcf.gz \
+     && rm -r test \
+     && rm -r results
 
 USER ubuntu
 WORKDIR /home/ubuntu
-
-
 
 CMD ["/bin/bash"]
