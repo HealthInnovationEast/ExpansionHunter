@@ -1,4 +1,6 @@
 #!/bin/sh
+set -e
+
 mkdir -p test
 mkdir -p results
 cd results
@@ -11,6 +13,6 @@ bgzip -c results/repeats.vcf > test/repeats.vcf.gz
 tabix -p vcf test/repeats.vcf.gz
 touch test/annot.hdr
 Rscript mapV3.r results/repeats.txt results/repeats_realigned.bam test/repeats.vcf results/multi_str.txt test/ test/ repeats
-rm test/repeats2.MAP.vcf.gz
+rm test/repeats.MAP.vcf.gz
 rm -r test
 rm -r results
