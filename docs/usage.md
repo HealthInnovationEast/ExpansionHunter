@@ -13,6 +13,7 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
   - [`--region_extension_length`](#--region_extension_length)
   - [`--analysis_mode`](#--analysis_mode)
   - [`--aligner`](#--aligner)
+  - [`--augment`](#--augment)
 - [Resource options](#resource-options)
   - [`--memory`](#--memory)
   - [`--disk`](#--disk)
@@ -62,6 +63,12 @@ Passed to `--analysis-mode`. See core [usage][eh-usage].
 ### `--aligner`
 
 See core [usage][eh-usage].
+
+### `--augment`
+
+Process XG tags of primary BAM Expansion Huneter output to mean absolute ploidy (MAP) and include in the VCF file.
+
+This will result in only the VCF file being retained.
 
 ## Resource options
 

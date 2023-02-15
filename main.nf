@@ -216,6 +216,37 @@ process sort_n_index {
     """
 }
 
+process augment {
+  input:
+    tuple val(sampleId), path(vcf), path(bam)
+    tuple path(repeats), path(multistr)
+
+  output:
+    tuple path('*.vcf.gz'), path('*.vcf.gz.tbi'), emit: eh_vcf
+
+   publishDir {
+      "results/${sampleId}"
+  }, mode: 'copy', pattern: '*.MAP.vcf.{gz,gz.tbi}'
+
+  // not stricly needed here, but incase used as template later
+  // makes sure pipelines fail properly, plus errors and undef values
+  shell = ['/bin/bash', '-euo', 'pipefail']
+
+  script:
+    def raw_vcf = vcf.toString().minus('.vcf')
+    """
+    (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort -k1,1 -k2,2n)) > sorted.vcf
+    mapV3.r ${repeats} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf}
+    """
+
+  stub:
+    def raw_vcf = vcf.toString().minus('.vcf')
+    """
+    touch ${raw_vcf}.MAP.vcf.gz
+    touch ${raw_vcf}.MAP.vcf.gz.tbi
+    """
+}
+
 
 workflow {
     samples = Channel.fromPath(params.sample_info)
@@ -250,5 +281,11 @@ workflow {
         params.region_extension_length,
         params.analysis_mode
       )
-      sort_n_index(expansion_hunter.out.eh_data, params.reference)
+      if ( params.augment ) {
+        augment(expansion_hunter.out.eh_data, tuple(params.repeats, params.multistr))
+      }
+      else {
+        sort_n_index(expansion_hunter.out.eh_data, params.reference)
+      }
+
 }

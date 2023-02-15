@@ -9,8 +9,6 @@ RUN apt-get update -y \
 RUN apt-get update -y \
     && apt-get install --no-install-recommends -y r-cran-tidyr r-cran-dplyr r-cran-data.table r-cran-stringr r-bioc-rsamtools r-cran-argparser r-bioc-genomicalignments \
     && rm -rf /var/lib/apt/lists/*
-#RUN R -e "install.packages(c('tidyr', 'dplyr', 'data.table', 'stringr', 'Rsamtools', 'argparser', 'BiocManager'), dependencies=TRUE, repos='http://cran.rstudio.com/')"
-#RUN R -e "BiocManager::install(c('GenomicAlignments'))"
 
 ENV OPT /opt/cynapse-ccri
 ENV PATH $OPT/bin:$PATH
