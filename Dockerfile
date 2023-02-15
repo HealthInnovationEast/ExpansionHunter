@@ -27,7 +27,7 @@ RUN mkdir -p $OPT/bin
 COPY /DockeriseRmap/mapV3.r /DockeriseRmap/*.sh $OPT/bin/
 RUN chmod ugo+x $OPT/bin/*
 
-RUN test_script.sh
+RUN cd /tmp && test_script.sh
 
 RUN adduser --disabled-password --gecos '' ubuntu && chsh -s /bin/bash && mkdir -p /home/ubuntu
 
