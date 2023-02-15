@@ -235,6 +235,7 @@ process augment {
   script:
     def raw_vcf = vcf.toString().minus('.vcf')
     """
+    echo \$PATH
     (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort -k1,1 -k2,2n)) > sorted.vcf
     mapV3.r ${repeats} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf}
     """
