@@ -16,7 +16,7 @@ p <- arg_parser("Incorporate MAP values from alignments into the VCF file")
 # add args
 p <- add_argument(p, 'variants', type="character", help = 'File containing EH variants')
 p <- add_argument(p, 'bamfile', type="character", help = 'BAM File from EH')
-p <- add_argument(p, 'vcffile', type="character", help = 'BAM File from EH')
+p <- add_argument(p, 'vcffile', type="character", help = 'VCF file from EH')
 p <- add_argument(p, 'multi_strs', type="character", help = 'Text file containing multi-str variants (not handled)')
 p <- add_argument(p, 'folder', type="character", help = 'Path for intermediate files')
 p <- add_argument(p, 'outdir', type="character", help = 'Path for final output file')
@@ -82,8 +82,8 @@ write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">'
 # This script takes the reads that overlap a locus with only one repeat
 # and combines the CIGAR strings for all the reads overlapping that locus, saving the output in the temp directory
 temp_file = paste0(folder, "temp_data.txt")
-system(paste('sh map.sh', bamfile, multi_str, temp_file))
+system(paste('map.sh', bamfile, multi_str, temp_file))
 MAP <- calc_map_vect(temp_file)
 add_tag(folder, sample, MAP)
 #Error checking script looks to see if the final annotated vcf has more than 1000 missing values or MAP values lower than 0.8.
-system(paste('sh error_check_map.sh', paste0(outdir, outfile, '.MAP.vcf.gz')))
+system(paste('error_check_map.sh', paste0(outdir, outfile, '.MAP.vcf.gz')))
