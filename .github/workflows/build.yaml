@@ -63,7 +63,7 @@ jobs:
       # then run with test data - uses script/shell/exec blocks
       - run: example/prepare_test_data.sh
       - run: |
-          echo -e "process { withName: augment { container = 'quay.io/cynapse-ccri/expansionhunter:${{ steps.meta.outputs.tags }}'\n cpus = 1\n memory = 1.GB } }" > tmp.config
+          echo -e "process { withName: augment { container = 'quay.io/cynapse-ccri/expansionhunter:${{ steps.meta.outputs.tags }}' } }" > tmp.config
           cat tmp.config >> nextflow.stubRun.config
       - run: cat nextflow.stubRun.config
       # stub run first - standard
