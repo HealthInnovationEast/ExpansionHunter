@@ -65,7 +65,6 @@ jobs:
       - run: |
           echo -e "process { withName: augment { container = '${{ steps.meta.outputs.tags }}' } }" > tmp.config
           cat tmp.config >> nextflow.stubRun.config
-      - run: cat nextflow.stubRun.config
       # stub run first - standard
       - run: nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
       # stub run first - augment
