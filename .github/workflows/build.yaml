@@ -62,13 +62,12 @@ jobs:
       - run: nextflow run main.nf -stub-run -profile test
       # then run with test data - uses script/shell/exec blocks
       - run: example/prepare_test_data.sh
+      # this overrides the inbuilt local.config to use the image built in this workflow
       - run: |
-          echo -e "process { withName: augment { container = '${{ steps.meta.outputs.tags }}' } }" > tmp.config
-          cat tmp.config >> nextflow.stubRun.config
-      # stub run first - standard
+          echo -e "process { withName: augment { container = '${{ steps.meta.outputs.tags }}' } }" > local.config
+      # stub runs
       - run: nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
-      # stub run first - augment
-      - run: nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
+      - run: nextflow -c nextflow.stubRun.config -c local.config run main.nf -profile test -stub-run --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
       # real exec as it works
-      - run: nextflow run main.nf -profile test
-      - run: nextflow run -c tmp.config main.nf -profile test --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
+      - run: nextflow run -c main.nf -profile test
+      - run: nextflow run -c local.config main.nf -profile test --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt

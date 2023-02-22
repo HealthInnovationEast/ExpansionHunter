@@ -66,9 +66,9 @@ See core [usage][eh-usage].
 
 ### `--augment`
 
-Process XG tags of primary BAM Expansion Huneter output to mean absolute ploidy (MAP) and include in the VCF file.
+Process XG tags of primary BAM Expansion Hunter output to mean absolute ploidy (MAP) and include in the VCF file.
 
-This will result in only the VCF file being retained.
+This will result in no BAM/CRAM in the final output (just VCF, index and json).
 
 ## Resource options
 

@@ -150,11 +150,11 @@ process expansion_hunter {
 
   output:
     tuple val(sampleId), path('*.vcf'), path('*_realigned.bam'), emit: eh_data
-    path '*.json'
+    path '*.json.gz'
 
   publishDir {
       "results/${sampleId}"
-  }, mode: 'copy', pattern: '*.json'
+  }, mode: 'copy', pattern: '*.json.gz'
 
   // not stricly needed here, but incase used as template later
   // makes sure pipelines fail properly, plus errors and undef values
@@ -173,13 +173,14 @@ process expansion_hunter {
       --region-extension-length ${region_extension_length} \
       --analysis-mode '${analysis_mode}' \
       --threads ${task.cpus}
+    gzip -c ${sampleId}.json > ${sampleId}.json.gz
     """
 
   stub:
     """
     touch ${sampleId}.vcf
     touch ${sampleId}_realigned.bam
-    touch ${sampleId}.json
+    echo '' | gzip -c > ${sampleId}.json.gz
     """
 }
 
@@ -209,7 +210,7 @@ process sort_n_index {
 
   stub:
     """
-    touch ${vcf}.gz
+    echo '' | gzip -c > ${vcf}.gz
     touch ${vcf}.gz.tbi
     touch ${sampleId}_realigned.cram
     touch ${sampleId}_realigned.cram.crai
