@@ -13,7 +13,6 @@ echo -e 'chr1_165954_165962\tchr1\t165954' >> repeats.txt
 cd ..
 bgzip -c results/repeats.vcf > test/repeats.vcf.gz
 tabix -p vcf test/repeats.vcf.gz
-touch test/annot.hdr
 mapV3.r results/repeats.txt results/repeats_realigned.bam test/repeats.vcf results/multi_str.txt test/ test/ repeats
 
 bgzip -cd test/repeats.MAP.vcf.gz > test/repeats.MAP.vcf

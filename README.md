@@ -51,9 +51,10 @@ nextflow run -c local.config main.nf -profile test --augment --repeats $PWD/test
 
 ## Release process
 
-- Ensure all pointers to the ExpansionHunter version are updated
-  - search for the last version, with and without leading `v`.
-- Add the workflow to ExpansionHunter version mapping to the table in the readme
+- Ensure the version for `quay.io/wtsicgp/expansion_hunter` is appropriate:
+  - Add the workflow to ExpansionHunter version mapping in the table in the readme.
+- Update the container version for the `augment` process in `nextflow.config` to match the tag being created
+  - Different image `quay.io/cynapse-ccri/expansionhunter`
 - Ensure the CI pipeline has completed successfully
 
 <!-- links -->

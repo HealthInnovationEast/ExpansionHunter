@@ -23,7 +23,8 @@ docker run -u $(id -u ${USER}):$(id -g ${USER}) -v $PWD:/d:rw --rm quay.io/wtsic
 docker run -u $(id -u ${USER}):$(id -g ${USER}) -v $PWD:/d:rw --rm quay.io/wtsicgp/expansion_hunter:5.0.0 samtools index /d/variants.cram
 
 ## now prepare expansion hunter inputs
-curl -sSLO https://github.com/Illumina/ExpansionHunter/raw/v5.0.0/example/output/repeats.vcf
+# commit hash as tagged v5.0.0 vcf has error in header (Integer instead of Float)
+curl -sSLO https://github.com/Illumina/ExpansionHunter/raw/b22e63024b9fb6d481fc02f6a301dbbad74d503f/example/output/repeats.vcf
 curl -sSLO https://github.com/Illumina/ExpansionHunter/raw/v5.0.0/example/output/repeats_realigned.bam
 echo 'ATXN7\nATXN8OS' > multi_str.txt
 echo -e 'ATXN7\nATXN8OS' > multi_str.txt

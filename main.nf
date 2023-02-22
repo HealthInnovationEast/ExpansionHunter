@@ -239,11 +239,14 @@ process augment {
     (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort -k1,1 -k2,2n)) | bgzip -c > sorted.vcf.gz
     tabix -p vcf sorted.vcf.gz
     mkdir -p tmp
-    touch tmp/annot.hdr
     mapV3.r ${repeats} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf}
 
+    VCF_IN=\$(grep -cv '^#' ${vcf})
+    VCF_OUT=\$(zgrep -cv '^#' ${raw_vcf}.MAP.vcf.gz)
+
     # validate output
-    if [ \$(grep -cv '^#' ${repeats}) -ne \$(zgrep -cv '^#' ${raw_vcf}.MAP.vcf.gz) ]; then
+    if [ \$VCF_IN -ne \$VCF_OUT ]; then
+      >&2 echo "Input and output VCF have different number of records (\$VCF_IN vs \$VCF_OUT)"
       exit 1
     fi
     """

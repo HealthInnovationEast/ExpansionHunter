@@ -77,7 +77,7 @@ add_tag <- function(folder, sample,  MAP){
 
 
 # Write header line for annotation and store in inputs directory
-write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">', paste0(folder,'annot.hdr'))
+write('##FORMAT=<ID=MAP,Number=1,Type=Float,Description="Mean Absolute Purity">', file=paste0(folder,'annot.hdr'), append=FALSE)
 
 # This script takes the reads that overlap a locus with only one repeat
 # and combines the CIGAR strings for all the reads overlapping that locus, saving the output in the temp directory
@@ -85,7 +85,7 @@ temp_file = paste0(folder, "temp_data.txt")
 system(paste('map.sh', bamfile, multi_str, temp_file))
 MAP <- calc_map_vect(temp_file)
 add_tag(folder, sample, MAP)
-# #Error checking script looks to see if the final annotated vcf has more than 1000 missing values or MAP values lower than 0.8.
-# print("starting error_check_map.sh")
-# system(paste('error_check_map.sh', paste0(outdir, outfile, '.MAP.vcf.gz')))
-# print("Done")
+#Error checking script looks to see if the final annotated vcf has more than 1000 missing values or MAP values lower than 0.8.
+print("starting error_check_map.sh")
+system(paste('error_check_map.sh', paste0(outdir, outfile, '.MAP.vcf.gz')))
+print("Done")
