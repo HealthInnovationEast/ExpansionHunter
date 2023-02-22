@@ -65,7 +65,7 @@ jobs:
       # this overrides the inbuilt local.config to use the image built in this workflow
       - run: |
           echo -e "process { withName: augment { container = '${{ steps.meta.outputs.tags }}' } }" > local.config
-      # stub runs
+      # stub runs, extra config for stub as CloudOS not on version with introspection of relevant variable
       - run: nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
       - run: nextflow -c nextflow.stubRun.config -c local.config run main.nf -profile test -stub-run --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
       # real exec as it works

@@ -241,6 +241,11 @@ process augment {
     mkdir -p tmp
     touch tmp/annot.hdr
     mapV3.r ${repeats} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf}
+
+    # validate output
+    if [ \$(grep -cv '^#' ${repeats}) -ne \$(zgrep -cv '^#' ${raw_vcf}.MAP.vcf.gz) ]; then
+      exit 1
+    fi
     """
 
   stub:

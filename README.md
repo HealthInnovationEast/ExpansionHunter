@@ -41,7 +41,7 @@ cd ExpansionHunter
 ./example/prepare_test_data.sh
 # to ensure testing with latest image for augment
 docker build -t expansionhunter:local .
-# stub runs
+# stub runs, extra config for stub as CloudOS not on version with introspection of relevant variable
 nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
 nextflow -c nextflow.stubRun.config -c local.config run main.nf -profile test -stub-run --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
 # real runs
