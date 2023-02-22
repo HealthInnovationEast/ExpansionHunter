@@ -3,6 +3,7 @@ set -e
 
 mkdir -p test results
 cd results
+# commit hash as tagged v5.0.0 vcf has error in header (Integer instead of Float)
 curl -sSLO https://github.com/Illumina/ExpansionHunter/raw/b22e63024b9fb6d481fc02f6a301dbbad74d503f/example/output/repeats.vcf
 curl -sSLO https://github.com/Illumina/ExpansionHunter/raw/v5.0.0/example/output/repeats_realigned.bam
 echo -e 'ATXN7\nATXN8OS' > multi_str.txt
