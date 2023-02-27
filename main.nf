@@ -150,11 +150,11 @@ process expansion_hunter {
 
   output:
     tuple val(sampleId), path('*.vcf'), path('*_realigned.bam'), emit: eh_data
-    path '*.json'
+    path '*.json.gz'
 
   publishDir {
       "results/${sampleId}"
-  }, mode: 'copy', pattern: '*.json'
+  }, mode: 'copy', pattern: '*.json.gz'
 
   // not stricly needed here, but incase used as template later
   // makes sure pipelines fail properly, plus errors and undef values
@@ -173,13 +173,14 @@ process expansion_hunter {
       --region-extension-length ${region_extension_length} \
       --analysis-mode '${analysis_mode}' \
       --threads ${task.cpus}
+    gzip -c ${sampleId}.json > ${sampleId}.json.gz
     """
 
   stub:
     """
     touch ${sampleId}.vcf
     touch ${sampleId}_realigned.bam
-    touch ${sampleId}.json
+    echo '' | gzip -c > ${sampleId}.json.gz
     """
 }
 
@@ -209,10 +210,52 @@ process sort_n_index {
 
   stub:
     """
-    touch ${vcf}.gz
+    echo '' | gzip -c > ${vcf}.gz
     touch ${vcf}.gz.tbi
     touch ${sampleId}_realigned.cram
     touch ${sampleId}_realigned.cram.crai
+    """
+}
+
+process augment {
+  input:
+    tuple val(sampleId), path(vcf), path(bam)
+    tuple path(repeats), path(multistr)
+
+  output:
+    tuple path('*.vcf.gz'), path('*.vcf.gz.tbi'), emit: eh_vcf
+
+   publishDir {
+      "results/${sampleId}"
+  }, mode: 'copy', pattern: '*.MAP.vcf.{gz,gz.tbi}'
+
+  // not stricly needed here, but incase used as template later
+  // makes sure pipelines fail properly, plus errors and undef values
+  shell = ['/bin/bash', '-euo', 'pipefail']
+
+  script:
+    def raw_vcf = vcf.toString().minus('.vcf')
+    """
+    (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort -k1,1 -k2,2n)) | bgzip -c > sorted.vcf.gz
+    tabix -p vcf sorted.vcf.gz
+    mkdir -p tmp
+    mapV3.r ${repeats} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf}
+
+    VCF_IN=\$(grep -cv '^#' ${vcf})
+    VCF_OUT=\$(zgrep -cv '^#' ${raw_vcf}.MAP.vcf.gz)
+
+    # validate output
+    if [ \$VCF_IN -ne \$VCF_OUT ]; then
+      >&2 echo "Input and output VCF have different number of records (\$VCF_IN vs \$VCF_OUT)"
+      exit 1
+    fi
+    """
+
+  stub:
+    def raw_vcf = vcf.toString().minus('.vcf')
+    """
+    touch ${raw_vcf}.MAP.vcf.gz
+    touch ${raw_vcf}.MAP.vcf.gz.tbi
     """
 }
 
@@ -250,5 +293,11 @@ workflow {
         params.region_extension_length,
         params.analysis_mode
       )
-      sort_n_index(expansion_hunter.out.eh_data, params.reference)
+      if ( params.augment ) {
+        augment(expansion_hunter.out.eh_data, tuple(params.repeats, params.multistr))
+      }
+      else {
+        sort_n_index(expansion_hunter.out.eh_data, params.reference)
+      }
+
 }

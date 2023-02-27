@@ -11,7 +11,7 @@ Nextflow for [ExpansionHunter][eh-repo] talored for multi sample execution.
 - [Version of workflow vs ExpansionHunter](#version-of-workflow-vs-expansionhunter)
 - [Usage](#usage)
 - [Docker image](#docker-image)
-- [Test data/profile](#test-dataprofile)
+- [Local testing](#local-testing)
 - [Release process](#release-process)
 
 ## Version of workflow vs ExpansionHunter
@@ -28,23 +28,35 @@ Please see [usage][eh-nf-usage] page for details.
 
 The docker image used by this workflow is [wtsicgp/expansion_hunter][quay-eh], repository [here][casm-repo].
 
-## Test data/profile
+## Local testing
 
 The test data referred to in `example/sample_info.csv` needs to be prepared by running `example/prepare_test_data.sh`.
-The script should be executed in the folder you intend to run Nextflow.
+The script should be executed in the folder you intend to run Nextflow.  Below all the commands to make sure you can run
+with the current image too.
+
+The nextflow executions below are replicated in the github action, triggered on PR, develop/main merge and tags.
 
 ```bash
 cd ExpansionHunter
 ./example/prepare_test_data.sh
-nextflow run main.nf -profile test
+# to ensure testing with latest image for augment
+docker build -t expansionhunter:local .
+# stub runs, extra config for stub as CloudOS not on version with introspection of relevant variable
+nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
+nextflow -c nextflow.stubRun.config -c local.config run main.nf -profile test -stub-run --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
+# real runs
+nextflow run -c main.nf -profile test
+nextflow run -c local.config main.nf -profile test --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
 ```
 
 ## Release process
 
-- Ensure all pointers to the ExpansionHunter version are updated
-  - search for the last version, with and without leading `v`.
-- Add the workflow to ExpansionHunter version mapping to the table in the readme
+- Ensure the version for `quay.io/wtsicgp/expansion_hunter` is appropriate:
+  - Add the workflow to ExpansionHunter version mapping in the table in the readme.
+- Update the container version for the `augment` process in `nextflow.config` to match the tag being created
+  - Different image `quay.io/cynapse-ccri/expansionhunter`
 - Ensure the CI pipeline has completed successfully
+- Detail updates in `CHANGES.md`
 
 <!-- links -->
 
