@@ -1,5 +1,9 @@
 # Changes
 
+## 0.4.2
+
+Fix up dangling issues #5, #6
+
 ## 0.4.1
 
 Modifications specific to deployment via github actions.
