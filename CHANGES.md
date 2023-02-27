@@ -1,5 +1,9 @@
 # Changes
 
+## 0.4.1
+
+Modifications specific to deployment via github actions.
+
 ## 0.4.0
 
 - Configuration for CloudOS (CYNAPSE)
