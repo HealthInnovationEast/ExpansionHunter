@@ -56,6 +56,7 @@ nextflow run -c local.config main.nf -profile test --augment --repeats $PWD/test
 - Update the container version for the `augment` process in `nextflow.config` to match the tag being created
   - Different image `quay.io/cynapse-ccri/expansionhunter`
 - Ensure the CI pipeline has completed successfully
+- Detail updates in `CHANGES.md`
 
 <!-- links -->
 
