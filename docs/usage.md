@@ -14,6 +14,8 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
   - [`--analysis_mode`](#--analysis_mode)
   - [`--aligner`](#--aligner)
   - [`--augment`](#--augment)
+  - [`--repeats`](#--repeats)
+  - [`--multistr`](#--multistr)
 - [Resource options](#resource-options)
   - [`--memory`](#--memory)
   - [`--disk`](#--disk)
@@ -50,7 +52,10 @@ Passed to `--variant-cataloge`. See core [usage][eh-usage].
 
 ### `--cpus`
 
-Passed through to ExpansionHunter `--threads` and sort/cram compression.  Nextflow naming convention.
+Passed through to ExpansionHunter `--threads` and sort/cram compression.  Only the expansion hunter step will use all
+specified threads (max 16).  Other processes are capped.
+
+Nextflow naming convention.
 
 ### `--region_extension_length`
 
@@ -68,13 +73,29 @@ See core [usage][eh-usage].
 
 Process XG tags of primary BAM Expansion Hunter output to Mean Absolute Purity (MAP) and include in the VCF file.
 
-This will result in no BAM/CRAM in the final output (just VCF, index and json).
+This will result in no BAM/CRAM in the final output (just VCF, index and json).  Requires `--repeats` and `--multistr`
+to be specified.
+
+### `--repeats`
+
+Only required with `--augment`, plans to calculate on fly.
+
+### `--multistr`
+
+Only required with `--augment`, plans to calculate on fly.
 
 ## Resource options
 
 ### `--memory`
 
-Change the default per-cpu memory value: 3.2GB
+Change the default per-cpu memory value: 4.GB
+
+Memory is automatically scaled by CPUs and is unlikely to need any intervention, e.g.
+
+- 1 cpu = 4.GB RAM
+- 2 cpu = 8.GB RAM
+
+Total memory is capped at 192.GB, which gives a theoretical max of 12.GB for this param when 16 cpus in use.
 
 ### `--disk`
 

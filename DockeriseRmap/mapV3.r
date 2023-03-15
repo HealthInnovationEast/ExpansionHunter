@@ -21,6 +21,7 @@ p <- add_argument(p, 'multi_strs', type="character", help = 'Text file containin
 p <- add_argument(p, 'folder', type="character", help = 'Path for intermediate files')
 p <- add_argument(p, 'outdir', type="character", help = 'Path for final output file')
 p <- add_argument(p, 'outfile', type="character", help = 'Name for final output file, probably Sample Name')
+p <- add_argument(p, 'threads', type="integer", help = 'Max cpus/threads')
 # Parse the command line arguments
 argv <- parse_args(p)
 
@@ -31,6 +32,7 @@ multi_str <- argv$multi_strs
 folder <- argv$folder
 outdir <- argv$outdir
 outfile <- argv$outfile
+threads <- argv$threads
 
 library(tidyr)
 library(dplyr)
@@ -67,10 +69,10 @@ add_tag <- function(folder, sample,  MAP){
   write.table(df, paste0(folder,'temp/temp.annot.tab'), sep='\t', quote=F, row.names = F, col.names = F)
   # Sort zip and index annotation file
   system(paste0('sort -V -k1,1 -k2,2 ', folder,'temp/temp.annot.tab >> ', folder,'temp/temp.sorted_annot.tab'))
-  runbgzip(paste0(folder, 'temp/temp.sorted_annot.tab'))
+  runbgzip(paste0('--threads ', threads, ' ', folder, 'temp/temp.sorted_annot.tab'))
   runtabix(paste0('-s1 -b2 -e2 ', folder, 'temp/temp.sorted_annot.tab.gz'))
   # Run bcftools to annotate the vcf with MAP values
-  runbcftools(paste0('annotate -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'annot.hdr -c CHROM,POS,FMT/MAP ', vcffile, '.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
+  runbcftools(paste0('annotate --threads ', threads,  ' -a ', folder, 'temp/temp.sorted_annot.tab.gz -h ', folder, 'annot.hdr -c CHROM,POS,FMT/MAP ', vcffile, '.gz -Oz -o ', outdir, outfile, '.MAP.vcf.gz'))
   runtabix(paste0(outdir, outfile, '.MAP.vcf.gz'))
   system(paste0("rm ", folder, "temp/temp*"))
   }

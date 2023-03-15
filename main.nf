@@ -236,10 +236,10 @@ process augment {
   script:
     def raw_vcf = vcf.toString().minus('.vcf')
     """
-    (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort -k1,1 -k2,2n)) | bgzip -c > sorted.vcf.gz
+    (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort --parallel=${task.cpus} -k1,1 -k2,2n)) | bgzip --threads ${task.cpus} -c > sorted.vcf.gz
     tabix -p vcf sorted.vcf.gz
     mkdir -p tmp
-    mapV3.r ${repeats} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf}
+    mapV3.r ${repeats} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf} ${task.cpus}
 
     VCF_IN=\$(grep -cv '^#' ${vcf})
     VCF_OUT=\$(zgrep -cv '^#' ${raw_vcf}.MAP.vcf.gz)
