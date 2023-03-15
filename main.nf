@@ -220,7 +220,7 @@ process sort_n_index {
 process augment {
   input:
     tuple val(sampleId), path(vcf), path(bam)
-    tuple path(repeats), path(multistr)
+    tuple path(variants), path(multistr)
 
   output:
     tuple path('*.vcf.gz'), path('*.vcf.gz.tbi'), emit: eh_vcf
@@ -239,7 +239,7 @@ process augment {
     (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort --parallel=${task.cpus} -k1,1 -k2,2n)) | bgzip --threads ${task.cpus} -c > sorted.vcf.gz
     tabix -p vcf sorted.vcf.gz
     mkdir -p tmp
-    mapV3.r ${repeats} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf} ${task.cpus}
+    mapV3.r ${variants} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf} ${task.cpus}
 
     VCF_IN=\$(grep -cv '^#' ${vcf})
     VCF_OUT=\$(zgrep -cv '^#' ${raw_vcf}.MAP.vcf.gz)
@@ -294,7 +294,7 @@ workflow {
         params.analysis_mode
       )
       if ( params.augment ) {
-        augment(expansion_hunter.out.eh_data, tuple(params.repeats, params.multistr))
+        augment(expansion_hunter.out.eh_data, tuple(params.variants, params.multistr))
       }
       else {
         sort_n_index(expansion_hunter.out.eh_data, params.reference)
