@@ -26,9 +26,9 @@ summary['Working dir']                                 = workflow.workDir
 summary['Script dir']                                  = workflow.projectDir
 summary['User']                                        = workflow.userName
 // resources
-summary['memory'] = params.memory
-summary['cpus'] = params.cpus
-summary['disk'] = params.disk
+summary['memory']                                      = params.memory
+summary['cpus']                                        = params.cpus
+summary['disk']                                        = params.disk
 // then arguments
 summary['sample_info']                                 = params.sample_info
 summary['reference']                                   = params.reference
@@ -36,6 +36,9 @@ summary['variant_catalog']                             = params.variant_catalog
 summary['region_extension_length']                     = params.region_extension_length
 summary['aligner']                                     = params.aligner
 summary['analysis_mode']                               = params.analysis_mode
+summary['augment']                                     = params.augment
+// summary['variants']                                    = params.variants
+// summary['multistr']                                    = params.multistr
 
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
 log.info "-\033[2m--------------------------------------------------\033[0m-"
@@ -220,7 +223,7 @@ process sort_n_index {
 process augment {
   input:
     tuple val(sampleId), path(vcf), path(bam)
-    tuple path(variants), path(multistr)
+    path(variant_catalog)
 
   output:
     tuple path('*.vcf.gz'), path('*.vcf.gz.tbi'), emit: eh_vcf
@@ -238,8 +241,11 @@ process augment {
     """
     (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort --parallel=${task.cpus} -k1,1 -k2,2n)) | bgzip --threads ${task.cpus} -c > sorted.vcf.gz
     tabix -p vcf sorted.vcf.gz
+
+    parse_VC.sh sorted.vcf.gz ${variant_catalog}
+
     mkdir -p tmp
-    mapV3.r ${variants} ${bam} sorted.vcf ${multistr} tmp/ ./ ${raw_vcf} ${task.cpus}
+    mapV3.r variants.txt ${bam} sorted.vcf.gz multi_str.txt tmp/ ./ ${raw_vcf} ${task.cpus}
 
     VCF_IN=\$(grep -cv '^#' ${vcf})
     VCF_OUT=\$(zgrep -cv '^#' ${raw_vcf}.MAP.vcf.gz)
@@ -294,7 +300,8 @@ workflow {
         params.analysis_mode
       )
       if ( params.augment ) {
-        augment(expansion_hunter.out.eh_data, tuple(params.variants, params.multistr))
+        // augment_old(expansion_hunter.out.eh_data, tuple(params.variants, params.multistr))
+        augment(expansion_hunter.out.eh_data, params.variant_catalog)
       }
       else {
         sort_n_index(expansion_hunter.out.eh_data, params.reference)
