@@ -89,5 +89,5 @@ MAP <- calc_map_vect(temp_file)
 add_tag(folder, sample, MAP)
 #Error checking script looks to see if the final annotated vcf has more than 1000 missing values or MAP values lower than 0.8.
 print("starting error_check_map.sh")
-system(paste('error_check_map.sh', paste0(outdir, outfile, '.MAP.vcf.gz'), threads))
+system(paste('error_check_map.sh', paste0(outdir, outfile, '.MAP.vcf.gz')))
 print("Done")
