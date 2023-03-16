@@ -299,7 +299,6 @@ workflow {
         params.analysis_mode
       )
       if ( params.augment ) {
-        // augment_old(expansion_hunter.out.eh_data, tuple(params.variants, params.multistr))
         augment(expansion_hunter.out.eh_data, params.variant_catalog)
       }
       else {

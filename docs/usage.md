@@ -14,8 +14,6 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
   - [`--analysis_mode`](#--analysis_mode)
   - [`--aligner`](#--aligner)
   - [`--augment`](#--augment)
-  - [`--variants`](#--variants)
-  - [`--multistr`](#--multistr)
 - [Resource options](#resource-options)
   - [`--memory`](#--memory)
   - [`--disk`](#--disk)
@@ -75,18 +73,6 @@ Process XG tags of primary BAM Expansion Hunter output to Mean Absolute Purity (
 
 This will result in no BAM/CRAM in the final output (just VCF, index and json).  Requires `--repeats` and `--multistr`
 to be specified.
-
-### `--variants`
-
-List of variants genotyped by EH.
-
-Only required with `--augment`, plans to calculate on fly.
-
-### `--multistr`
-
-A list of STRs that have more than one STR at the locus.
-
-Only required with `--augment`, plans to calculate on fly.
 
 ## Resource options
 

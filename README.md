@@ -43,17 +43,17 @@ cd ExpansionHunter
 docker build -t expansionhunter:local .
 # stub runs, extra config for stub as CloudOS not on version with introspection of relevant variable
 nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
-nextflow -c nextflow.stubRun.config -c local.config run main.nf -profile test -stub-run --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
+nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run --augment --augment_container expansionhunter:local
 # real runs
 nextflow run -c main.nf -profile test
-nextflow run -c local.config main.nf -profile test --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
+nextflow run main.nf -profile test --augment --augment_container expansionhunter:local
 ```
 
 ## Release process
 
 - Ensure the version for `quay.io/wtsicgp/expansion_hunter` is appropriate:
   - Add the workflow to ExpansionHunter version mapping in the table in the readme.
-- Update the container version for the `augment` process in `nextflow.config` to match the tag being created
+- Update the container version for `params.augment_container` in `nextflow.config` to match the tag being created
   - Different image `quay.io/cynapse-ccri/expansionhunter`
 - Ensure the CI pipeline has completed successfully
 - Detail updates in `CHANGES.md`
