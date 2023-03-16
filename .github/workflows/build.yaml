@@ -62,9 +62,6 @@ jobs:
       - run: nextflow run main.nf -stub-run -profile test
       # then run with test data - uses script/shell/exec blocks
       - run: example/prepare_test_data.sh
-      # this overrides the inbuilt local.config to use the image built in this workflow
-      - run: |
-          PRIMARY_TAG=$(echo "${{ steps.meta.outputs.tags }}" | head -n 1)
       # stub runs, extra config for stub as CloudOS not on version with introspection of relevant variable
       - run: nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
       - run: |
