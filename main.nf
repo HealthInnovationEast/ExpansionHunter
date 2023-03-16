@@ -37,8 +37,7 @@ summary['region_extension_length']                     = params.region_extension
 summary['aligner']                                     = params.aligner
 summary['analysis_mode']                               = params.analysis_mode
 summary['augment']                                     = params.augment
-// summary['variants']                                    = params.variants
-// summary['multistr']                                    = params.multistr
+summary['augment_container']                           = params.augment_container
 
 log.info summary.collect { k,v -> "${k.padRight(18)}: $v" }.join("\n")
 log.info "-\033[2m--------------------------------------------------\033[0m-"
