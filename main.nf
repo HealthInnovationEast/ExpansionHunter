@@ -143,9 +143,8 @@ process obtain_pipeline_metadata {
 process expansion_hunter {
   input:
     tuple val(sampleId), val(sex), path(reads), path(read_idx)
-    //tuple val(sampleId), val(sex), val(reads), val(read_idx)
-    path(reference) //path
-    path(variant_catalog) //path
+    path(reference)
+    path(variant_catalog)
     val(aligner)
     val(region_extension_length)
     val(analysis_mode)
@@ -165,6 +164,8 @@ process expansion_hunter {
   script:
     sex = sex == '' ? 'female' : sex
     """
+    # ensure we can't use ENA ref server
+    export REF_PATH=:
     ExpansionHunter \
       --reference ${reference} \
       --variant-catalog ${variant_catalog} \
@@ -205,6 +206,8 @@ process sort_n_index {
 
   script:
     """
+    # ensure we can't use ENA ref server
+    export REF_PATH=:
     (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort -k1,1 -k2,2n)) | bgzip -c > ${vcf}.gz
     tabix -p vcf ${vcf}.gz
     samtools sort -@ ${task.cpus} --write-index --output-fmt CRAM -o ${sampleId}_realigned.cram --reference ${reference} ${bam}
@@ -238,6 +241,8 @@ process augment {
   script:
     def raw_vcf = vcf.toString().minus('.vcf')
     """
+    # ensure we can't use ENA ref server
+    export REF_PATH=:
     (grep -m 1 -B 100000 '^#CHR' ${vcf} && (grep -v '^#' ${vcf} | sort --parallel=${task.cpus} -k1,1 -k2,2n)) | bgzip --threads ${task.cpus} -c > sorted.vcf.gz
     tabix -p vcf sorted.vcf.gz
 
@@ -268,7 +273,6 @@ process augment {
 workflow {
     samples = Channel.fromPath(params.sample_info)
     sample_map = samples.splitCsv(header: true).map { row -> tuple(row.sampleId, row.sex, file(row.reads), file(row.read_idx)) }
-    //sample_map = samples.splitCsv(header: true).map { row -> tuple(row.sampleId, row.sex, row.reads, row.read_idx) }
 
 
     main:

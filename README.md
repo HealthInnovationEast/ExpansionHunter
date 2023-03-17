@@ -38,8 +38,8 @@ The nextflow executions below are replicated in the github action, triggered on 
 
 ```bash
 cd ExpansionHunter
+# this also generates a local build of the docker image, referenced later
 ./example/prepare_test_data.sh
-# to ensure testing with latest image for augment
 docker build -t expansionhunter:local .
 # stub runs, extra config for stub as CloudOS not on version with introspection of relevant variable
 nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run

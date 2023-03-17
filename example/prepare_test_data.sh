@@ -6,6 +6,9 @@ TAG='5.0.0'
 # This script downloads the ExpansionHunter test data from:
 # https://github.com/Illumina/ExpansionHunter/tree/${TAG}/example/input
 
+# before changing directory, make sure local build exists
+docker build -t expansionhunter:local .
+
 mkdir -p test_data
 cd test_data
 curl -sSLO https://github.com/Illumina/ExpansionHunter/raw/v${TAG}/example/input/reference.fa
