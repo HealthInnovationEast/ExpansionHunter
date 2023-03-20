@@ -1,5 +1,9 @@
 # Changes
 
+## 1.0.1
+
+Correction to `--disk` parameter default and application to processes.
+
 ## 1.0.0
 
 Improvements around:
