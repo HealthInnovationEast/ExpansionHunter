@@ -85,7 +85,7 @@ to be specified.
 
 ### `--memory`
 
-Change the default per-cpu memory value: 4.GB
+Change the default per-cpu memory value, default 4.GB
 
 Memory is automatically scaled by CPUs and is unlikely to need any intervention, e.g.
 
@@ -96,7 +96,7 @@ Total memory is capped at 192.GB, which gives a theoretical max of 12.GB for thi
 
 ### `--disk`
 
-Set required disk space for job: 10GB
+Set required disk space for job, default 100.GB
 
 This should be ~ `input data x 1.5`.
 
