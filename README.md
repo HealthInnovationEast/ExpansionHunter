@@ -16,9 +16,9 @@ Nextflow for [ExpansionHunter][eh-repo] talored for multi sample execution.
 
 ## Version of workflow vs ExpansionHunter
 
-|             Workflow             | ExpansionHunter |
-| :------------------------------: | :-------------: |
-| 0.1.0, 0.1.1,<br>0.2.0,<br>0.3.0 |     v5.0.0      |
+|                      Workflow                       | ExpansionHunter |
+| :-------------------------------------------------: | :-------------: |
+| 0.1.0, 0.1.1,<br>0.2.0,<br>0.3.0<br>0.4.\*<br>1.0.0 |     v5.0.0      |
 
 ## Usage
 
@@ -38,22 +38,22 @@ The nextflow executions below are replicated in the github action, triggered on 
 
 ```bash
 cd ExpansionHunter
+# this also generates a local build of the docker image, referenced later
 ./example/prepare_test_data.sh
-# to ensure testing with latest image for augment
 docker build -t expansionhunter:local .
 # stub runs, extra config for stub as CloudOS not on version with introspection of relevant variable
 nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
-nextflow -c nextflow.stubRun.config -c local.config run main.nf -profile test -stub-run --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
+nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run --augment --augment_container expansionhunter:local
 # real runs
 nextflow run -c main.nf -profile test
-nextflow run -c local.config main.nf -profile test --augment --repeats $PWD/test_data/repeats.txt --multistr $PWD/test_data/multi_str.txt
+nextflow run main.nf -profile test --augment --augment_container expansionhunter:local
 ```
 
 ## Release process
 
 - Ensure the version for `quay.io/wtsicgp/expansion_hunter` is appropriate:
   - Add the workflow to ExpansionHunter version mapping in the table in the readme.
-- Update the container version for the `augment` process in `nextflow.config` to match the tag being created
+- Update the container version for `params.augment_container` in `nextflow.config` to match the tag being created
   - Different image `quay.io/cynapse-ccri/expansionhunter`
 - Ensure the CI pipeline has completed successfully
 - Detail updates in `CHANGES.md`

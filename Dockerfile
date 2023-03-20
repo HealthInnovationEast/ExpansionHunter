@@ -4,7 +4,7 @@ USER  root
 
 RUN apt-get update -y \
     && apt-get install --no-install-recommends -y \
-       libcurl4-openssl-dev samtools gawk tabix bcftools curl procps \
+       libcurl4-openssl-dev samtools gawk tabix bcftools curl procps jq \
        r-cran-tidyr r-cran-dplyr r-cran-data.table r-cran-stringr r-bioc-rsamtools r-cran-argparser r-bioc-genomicalignments \
     && rm -rf /var/lib/apt/lists/*
 

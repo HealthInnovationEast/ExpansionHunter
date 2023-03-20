@@ -1,5 +1,16 @@
 # Changes
 
+## 1.0.0
+
+Improvements around:
+
+- Stability on poor quality inputs
+- Default parameters for efficient execution
+  - `--cpus` set at 16 for expansion hunter, capped at 4 for other multi-process steps
+  - Can still be overridden via args
+- `--analysis_mode` default set to `streaming` as more efficient than `seeking`
+- Documentation updated
+
 ## 0.4.2
 
 Fix up dangling issues #5, #6
