@@ -15,8 +15,8 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
   - [`--aligner`](#--aligner)
   - [`--augment`](#--augment)
 - [Resource options](#resource-options)
-  - [`--memory`](#--memory)
   - [`--disk`](#--disk)
+  - [`--memory`](#--memory)
 - [CYNAPSE](#cynapse)
   - [Profiles](#profiles)
   - [Parameters](#parameters)
@@ -83,6 +83,12 @@ to be specified.
 
 ## Resource options
 
+### `--disk`
+
+Set required disk space for job, default 100.GB
+
+This should be ~ `input data x 1.5`.
+
 ### `--memory`
 
 Change the default per-cpu memory value, default 4.GB
@@ -93,12 +99,6 @@ Memory is automatically scaled by CPUs and is unlikely to need any intervention,
 - 2 cpu = 8.GB RAM
 
 Total memory is capped at 192.GB, which gives a theoretical max of 12.GB for this param when 16 cpus in use.
-
-### `--disk`
-
-Set required disk space for job, default 100.GB
-
-This should be ~ `input data x 1.5`.
 
 ## CYNAPSE
 
@@ -125,6 +125,7 @@ Specify the parameters required to perform an analysis, the expected items are:
 - `--reference`
 - `--variant_catalog`
 - `--augment` - optional, but expected for primary use case
+- `--disk` - optional, however may need changing to cope with BAM file inputs
 
 ### Host configuration
 
