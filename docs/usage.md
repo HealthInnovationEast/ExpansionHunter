@@ -17,6 +17,11 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
 - [Resource options](#resource-options)
   - [`--memory`](#--memory)
   - [`--disk`](#--disk)
+- [CYNAPSE](#cynapse)
+  - [Profiles](#profiles)
+  - [Parameters](#parameters)
+  - [Host configuration](#host-configuration)
+  - [Cost limit](#cost-limit)
 
 ## Required args
 
@@ -51,7 +56,7 @@ Passed to `--variant-cataloge`. See core [usage][eh-usage].
 ### `--cpus`
 
 Passed through to ExpansionHunter `--threads` and sort/cram compression.  Only the expansion hunter step will use all
-specified threads (max 16).  Other processes are capped.
+specified threads (max 16, default 16).  Other multi core processes are capped at 4 cpus.
 
 Nextflow naming convention.
 
@@ -60,6 +65,8 @@ Nextflow naming convention.
 Passed to `--region-extension-length`. See core [usage][eh-usage].
 
 ### `--analysis_mode`
+
+Default to `streaming` as significantly faster than seeking.
 
 Passed to `--analysis-mode`. See core [usage][eh-usage].
 
@@ -93,6 +100,49 @@ Set required disk space for job: 10GB
 
 This should be ~ `input data x 1.5`.
 
+## CYNAPSE
+
+This section details additional information to run analysis in CYNAPSE.
+
+### Profiles
+
+To execute the workflow efficiently you need to specify the appropriate profiles in the workflow configuration.
+Select the area "Nextflow profiles" as shown in below image:
+
+![profiles][cloudos-image]
+
+You need to specify `awsbatch`, *plus one of the following* depending on where the analysis is executed:
+
+- User Workspace: `cynapse-pro-wrkspc`
+- Admin Workspace: `cynapse-pro-admin`
+
+### Parameters
+
+Specify the parameters required to perform an analysis, the expected items are:
+
+- `--sample_info`
+  - Make sure to split this into sensible sample groups
+- `--reference`
+- `--variant_catalog`
+- `--augment` - optional, but expected for primary use case
+
+### Host configuration
+
+Once the workflow settings and parameters are defined you will need to specify the configuration for the execution node.
+
+This can be very light-weight as it only monitors the job when under awsbatch.  Recommend:
+
+- On-demand
+- `t3a.medium` (2 CPUS / 4 GiB)
+- 40 GB disk
+
+### Cost limit
+
+Each sample will cost ~$0.50 to run, you should scale the cost limit based on the number of samples defined in `--sample_info`.
+
+Test runs using 20 GB input CRAM have a cost range of $0.20-0.26.
+
 <!-- refs -->
 
+[cloudos-image]: profiles.png
 [eh-usage]: https://github.com/Illumina/ExpansionHunter/blob/v5.0.0/docs/03_Usage.md
