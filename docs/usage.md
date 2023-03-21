@@ -17,6 +17,7 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
 - [Resource options](#resource-options)
   - [`--disk`](#--disk)
   - [`--memory`](#--memory)
+  - [`--time`](#--time)
 - [CYNAPSE](#cynapse)
   - [Profiles](#profiles)
   - [Parameters](#parameters)
@@ -99,6 +100,12 @@ Memory is automatically scaled by CPUs and is unlikely to need any intervention,
 
 Total memory is capped at 192.GB, which gives a theoretical max of 12.GB for this param when 16 cpus in use.
 
+### `--time`
+
+Change the default time for the main processes, default `4h`.
+
+See [nextflow time][nxf-time] docs for format.  This is only relevant to a subset of schedulers.
+
 ## CYNAPSE
 
 This section details additional information to run analysis in CYNAPSE.
@@ -146,3 +153,4 @@ Test runs using 20 GB input CRAM have a cost range of $0.20-0.26.
 
 [cloudos-image]: profiles.png
 [eh-usage]: https://github.com/Illumina/ExpansionHunter/blob/v5.0.0/docs/03_Usage.md
+[nxf-time]: https://www.nextflow.io/docs/latest/process.html#process-time
