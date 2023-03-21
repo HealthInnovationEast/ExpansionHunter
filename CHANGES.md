@@ -1,5 +1,13 @@
 # Changes
 
+## 1.0.3
+
+Add `--time` parameter to account for use on slurm.
+
+## 1.0.2
+
+Documentation corrections
+
 ## 1.0.1
 
 Correction to `--disk` parameter default and application to processes.
