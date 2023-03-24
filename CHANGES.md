@@ -1,5 +1,9 @@
 # Changes
 
+## NEXT
+
+- Documentation refinement and corrections
+
 ## 1.0.3
 
 Add `--time` parameter to account for use on slurm.

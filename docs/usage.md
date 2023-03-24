@@ -28,21 +28,22 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
 
 ### `--sample_info`
 
-Comma seperated value file with header:
+Comma separated value (csv) file with compulsory header:
 
 ```
-sampleId,sex,alignments
+sampleId,sex,reads,read_idx
 ```
 
 Each subsequent line describes an individual sample.
 
-| sampleId              | sex         | reads                            | read_idx           |
+| `sampleId`            | `sex`       | `reads`                          | `read_idx`         |
 | --------------------- | ----------- | -------------------------------- | ------------------ |
 | Identifier for sample | male/female | BAM or CRAM file to be processed | Index for bam/cram |
 
 - `sampleId` is incoprporated into `--output-prefix` in the core command.
 - `sex` is passed to `--sex`, if empty it is set to the default of `female`.
 - `reads` is passed to `--reads`.
+- `read_idx` is required to ensure the index is staged appropriately.
 
 ### `--reference`
 
