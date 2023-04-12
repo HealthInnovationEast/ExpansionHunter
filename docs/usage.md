@@ -15,7 +15,6 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
   - [`--aligner`](#--aligner)
   - [`--augment`](#--augment)
 - [Resource options](#resource-options)
-  - [`--disk`](#--disk)
   - [`--memory`](#--memory)
   - [`--time`](#--time)
 - [CYNAPSE](#cynapse)
@@ -84,12 +83,6 @@ This will result in no BAM/CRAM in the final output (just VCF, index and json).
 
 ## Resource options
 
-### `--disk`
-
-Set required disk space for job, default 100.GB
-
-This should be ~ `input data x 1.5`.
-
 ### `--memory`
 
 Change the default per-cpu memory value, default 4.GB
@@ -132,7 +125,6 @@ Specify the parameters required to perform an analysis, the expected items are:
 - `--reference`
 - `--variant_catalog`
 - `--augment` - optional, but expected for primary use case
-- `--disk` - optional, however may need changing to cope with BAM file inputs
 
 ### Host configuration
 
