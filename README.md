@@ -42,11 +42,11 @@ cd ExpansionHunter
 ./example/prepare_test_data.sh
 docker build -t expansionhunter:local .
 # stub runs, extra config for stub as CloudOS not on version with introspection of relevant variable
-nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run
-nextflow -c nextflow.stubRun.config run main.nf -profile test -stub-run --augment --augment_container expansionhunter:local
+nextflow -c nextflow.stubRun.config run main.nf -executor local -profile test -stub-run
+nextflow -c nextflow.stubRun.config run main.nf -executor local -profile test -stub-run --augment --augment_container expansionhunter:local
 # real runs
-nextflow run -c main.nf -profile test
-nextflow run main.nf -profile test --augment --augment_container expansionhunter:local
+nextflow run -c main.nf -executor local -profile test
+nextflow run main.nf -executor local -profile test --augment --augment_container expansionhunter:local
 ```
 
 ## Release process
