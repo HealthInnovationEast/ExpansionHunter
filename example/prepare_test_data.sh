@@ -6,8 +6,11 @@ TAG='5.0.0'
 # This script downloads the ExpansionHunter test data from:
 # https://github.com/Illumina/ExpansionHunter/tree/${TAG}/example/input
 
-# before changing directory, make sure local build exists
-docker build -t expansionhunter:local .
+CI_CHK=${CI:-not_ci}
+if [[ ${CI_CHK} == "not_ci" ]]; then
+    # when not GitHub action make sure local build exists
+    docker build -t expansionhunter:local .
+fi
 
 mkdir -p test_data
 cd test_data

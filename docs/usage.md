@@ -15,7 +15,6 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
   - [`--aligner`](#--aligner)
   - [`--augment`](#--augment)
 - [Resource options](#resource-options)
-  - [`--disk`](#--disk)
   - [`--memory`](#--memory)
   - [`--time`](#--time)
 - [CYNAPSE](#cynapse)
@@ -28,21 +27,22 @@ All links here are pinned to the version of ExpansionHunter that this nextflow h
 
 ### `--sample_info`
 
-Comma seperated value file with header:
+Comma separated value (csv) file with compulsory header:
 
 ```
-sampleId,sex,alignments
+sampleId,sex,reads,read_idx
 ```
 
 Each subsequent line describes an individual sample.
 
-| sampleId              | sex         | reads                            | read_idx           |
+| `sampleId`            | `sex`       | `reads`                          | `read_idx`         |
 | --------------------- | ----------- | -------------------------------- | ------------------ |
 | Identifier for sample | male/female | BAM or CRAM file to be processed | Index for bam/cram |
 
 - `sampleId` is incoprporated into `--output-prefix` in the core command.
 - `sex` is passed to `--sex`, if empty it is set to the default of `female`.
 - `reads` is passed to `--reads`.
+- `read_idx` is required to ensure the index is staged appropriately.
 
 ### `--reference`
 
@@ -83,22 +83,16 @@ This will result in no BAM/CRAM in the final output (just VCF, index and json).
 
 ## Resource options
 
-### `--disk`
-
-Set required disk space for job, default 100.GB
-
-This should be ~ `input data x 1.5`.
-
 ### `--memory`
 
-Change the default per-cpu memory value, default 4.GB
+Change the default per-cpu memory value, default 3.5.GB
 
 Memory is automatically scaled by CPUs and is unlikely to need any intervention, e.g.
 
-- 1 cpu = 4.GB RAM
-- 2 cpu = 8.GB RAM
+- 1 cpu = 3.5.GB RAM
+- 2 cpu = 7.GB RAM
 
-Total memory is capped at 192.GB, which gives a theoretical max of 12.GB for this param when 16 cpus in use.
+Total memory is capped at 192.GB
 
 ### `--time`
 
@@ -112,15 +106,8 @@ This section details additional information to run analysis in CYNAPSE.
 
 ### Profiles
 
-To execute the workflow efficiently you need to specify the appropriate profiles in the workflow configuration.
-Select the area "Nextflow profiles" as shown in below image:
-
-![profiles][cloudos-image]
-
-You need to specify `awsbatch`, *plus one of the following* depending on where the analysis is executed:
-
-- User Workspace: `cynapse-pro-wrkspc`
-- Admin Workspace: `cynapse-pro-admin`
+Some profiles are available (see `conf/*.config`), however the base configuration is targeted at CloudOS and pre-set to
+use the `awsbatch` executor.
 
 ### Parameters
 
@@ -131,7 +118,6 @@ Specify the parameters required to perform an analysis, the expected items are:
 - `--reference`
 - `--variant_catalog`
 - `--augment` - optional, but expected for primary use case
-- `--disk` - optional, however may need changing to cope with BAM file inputs
 
 ### Host configuration
 
@@ -151,6 +137,5 @@ Test runs using 20 GB input CRAM have a cost range of $0.20-0.26.
 
 <!-- refs -->
 
-[cloudos-image]: profiles.png
 [eh-usage]: https://github.com/Illumina/ExpansionHunter/blob/v5.0.0/docs/03_Usage.md
 [nxf-time]: https://www.nextflow.io/docs/latest/process.html#process-time

@@ -1,5 +1,11 @@
 # Changes
 
+## 1.1.0
+
+- Documentation refinement and corrections
+- Memory adjustments
+- Executor defaults to awsbatch
+
 ## 1.0.3
 
 Add `--time` parameter to account for use on slurm.
