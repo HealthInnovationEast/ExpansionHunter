@@ -1,5 +1,9 @@
 # Changes
 
+## 1.1.1
+
+- Remove references to disk
+
 ## 1.1.0
 
 - Documentation refinement and corrections
