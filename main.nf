@@ -28,7 +28,6 @@ summary['User']                                        = workflow.userName
 // resources
 summary['memory']                                      = params.memory
 summary['cpus']                                        = params.cpus
-summary['disk']                                        = params.disk
 // then arguments
 summary['sample_info']                                 = params.sample_info
 summary['reference']                                   = params.reference
