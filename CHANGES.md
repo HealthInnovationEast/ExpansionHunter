@@ -1,5 +1,9 @@
 # Changes
 
+## 1.1.2
+
+- Precedent and casting safety on retry logic
+
 ## 1.1.1
 
 - Remove references to disk
