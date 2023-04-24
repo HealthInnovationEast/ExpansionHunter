@@ -1,5 +1,9 @@
 # Changes
 
+## 1.1.3
+
+- Complete rework of resource max function
+
 ## 1.1.2
 
 - Precedent and casting safety on retry logic
