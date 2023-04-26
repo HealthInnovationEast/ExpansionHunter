@@ -1,34 +1,36 @@
 # Changes
 
-## 1.1.3
+## 1.1.2 - 1.1.4
 
-- Complete rework of resource max function
-
-## 1.1.2
-
-- Precedent and casting safety on retry logic
+- Complete rework of resource stepping on retry
+- No changes to scientific process or outputs
 
 ## 1.1.1
 
 - Remove references to disk
+- No changes to scientific process or outputs
 
 ## 1.1.0
 
 - Documentation refinement and corrections
 - Memory adjustments
 - Executor defaults to awsbatch
+- No changes to scientific process or outputs
 
 ## 1.0.3
 
-Add `--time` parameter to account for use on slurm.
+- Add `--time` parameter to account for use on slurm.
+- No changes to scientific process or outputs
 
 ## 1.0.2
 
-Documentation corrections
+- Documentation corrections
+- No changes to scientific process or outputs
 
 ## 1.0.1
 
-Correction to `--disk` parameter default and application to processes.
+- Correction to `--disk` parameter default and application to processes.
+- No changes to scientific process or outputs
 
 ## 1.0.0
 
@@ -40,14 +42,17 @@ Improvements around:
   - Can still be overridden via args
 - `--analysis_mode` default set to `streaming` as more efficient than `seeking`
 - Documentation updated
+- No changes to scientific process or outputs
 
 ## 0.4.2
 
-Fix up dangling issues #5, #6
+- Fix up dangling issues #5, #6
+- No changes to scientific process or outputs
 
 ## 0.4.1
 
-Modifications specific to deployment via github actions.
+- Modifications specific to deployment via github actions.
+- No changes to scientific process or outputs.
 
 ## 0.4.0
 
